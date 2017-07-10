@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .js-scrubber-dot {
+            width: 4px;
+            height: 4px;
+            border: 1px solid black;
+            position: absolute;
+            border-radius: 50%;
+        }
+
+        .js-scrubber-circle {
+            width: 8px;
+            height: 8px;
+            border: 1px solid black;
+            position: absolute;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="scrubber js-scrubber">
+        <div class="scrubber__dot js-scrubber-dot" style="transform: matrix(0, 0, 0, 0, -100, -100);"></div>
+        <div class="scrubber__dot js-scrubber-dot" style="transform: matrix(0, 0, 0, 0, -100, -100);"></div>
+        <div class="scrubber__dot js-scrubber-dot" style="transform: matrix(0, 0, 0, 0, -100, -100);"></div>
+        <div class="scrubber__dot js-scrubber-dot" style="transform: matrix(0, 0, 0, 0, -100, -100);"></div>
+        <div class="scrubber__dot js-scrubber-dot" style="transform: matrix(0, 0, 0, 0, -100, -100);"></div>
+        <div class="scrubber__dot js-scrubber-dot" style="transform: matrix(0, 0, 0, 0, -100, -100);"></div>
+        <div class="scrubber__dot js-scrubber-dot" style="transform: matrix(0, 0, 0, 0, -100, -100);"></div>
+        <div class="scrubber__dot js-scrubber-dot" style="transform: matrix(0, 0, 0, 0, -100, -100);"></div>
+        <div class="scrubber__dot js-scrubber-dot" style="transform: matrix(0, 0, 0, 0, -100, -100);"></div>
+        <div class="scrubber__dot js-scrubber-dot" style="transform: matrix(0, 0, 0, 0, -100, -100);"></div>
+        <div class="scrubber__dot js-scrubber-dot" style="transform: matrix(0, 0, 0, 0, -100, -100);"></div>
+        <div class="scrubber__dot js-scrubber-dot" style="transform: matrix(0, 0, 0, 0, -100, -100);"></div>
+        <div class="scrubber__dot js-scrubber-dot" style="transform: matrix(0, 0, 0, 0, -100, -100);"></div>
+        <div class="scrubber__dot js-scrubber-dot" style="transform: matrix(0, 0, 0, 0, -100, -100);"></div>
+        <div class="scrubber__dot js-scrubber-dot" style="transform: matrix(0, 0, 0, 0, -100, -100);"></div>
+        <div class="scrubber__dot js-scrubber-dot" style="transform: matrix(0, 0, 0, 0, -100, -100);"></div>
+        <div class="scrubber__dot js-scrubber-dot" style="transform: matrix(0, 0, 0, 0, -100, -100);"></div>
+        <div class="scrubber__dot js-scrubber-dot" style="transform: matrix(0, 0, 0, 0, -100, -100);"></div>
+        <div class="scrubber__dot js-scrubber-dot" style="transform: matrix(0, 0, 0, 0, -100, -100);"></div>
+        <div class="scrubber__dot js-scrubber-dot" style="transform: matrix(0, 0, 0, 0, -100, -100);"></div>
+        <div class="scrubber__dot js-scrubber-dot" style="transform: matrix(0, 0, 0, 0, -100, -100);"></div>
+        <div class="scrubber__dot js-scrubber-dot" style="transform: matrix(0, 0, 0, 0, -100, -100);"></div>
+        <div class="scrubber__dot js-scrubber-dot" style="transform: matrix(0, 0, 0, 0, -100, -100);"></div>
+        <div class="scrubber__dot js-scrubber-dot" style="transform: matrix(0, 0, 0, 0, -100, -100);"></div>
+        <div class="scrubber__dot js-scrubber-dot" style="transform: matrix(0, 0, 0, 0, -100, -100);"></div>
+        <div class="scrubber__dot js-scrubber-dot" style="transform: matrix(0, 0, 0, 0, -100, -100);"></div>
+        <div class="scrubber__dot js-scrubber-dot" style="transform: matrix(0, 0, 0, 0, -100, -100);"></div>
+        <div class="scrubber__dot js-scrubber-dot" style="transform: matrix(0, 0, 0, 0, -100, -100);"></div>
+        <div class="scrubber__dot js-scrubber-dot" style="transform: matrix(0, 0, 0, 0, -100, -100);"></div>
+        <div class="scrubber__dot js-scrubber-dot" style="transform: matrix(0, 0, 0, 0, -100, -100);"></div>
+        <div class="scrubber__dot js-scrubber-dot" style="transform: matrix(0, 0, 0, 0, -100, -100);"></div>
+        <div class="scrubber__dot js-scrubber-dot" style="transform: matrix(0, 0, 0, 0, -100, -100);"></div>
+        <div class="scrubber__dot js-scrubber-dot" style="transform: matrix(0, 0, 0, 0, -100, -100);"></div>
+        <div class="scrubber__dot js-scrubber-dot" style="transform: matrix(0, 0, 0, 0, -100, -100);"></div>
+        <div class="scrubber__dot js-scrubber-dot" style="transform: matrix(0, 0, 0, 0, -100, -100);"></div>
+        <div class="scrubber__dot js-scrubber-dot" style="transform: matrix(0, 0, 0, 0, -100, -100);"></div>
+        <div class="scrubber__dot js-scrubber-dot" style="transform: matrix(0, 0, 0, 0, -100, -100);"></div>
+        <div class="scrubber__dot js-scrubber-dot" style="transform: matrix(0, 0, 0, 0, -100, -100);"></div>
+        <div class="scrubber__dot js-scrubber-dot" style="transform: matrix(0, 0, 0, 0, -100, -100);"></div>
+        <div class="scrubber__dot js-scrubber-dot" style="transform: matrix(0, 0, 0, 0, -100, -100);"></div>
+        <div class="scrubber__dot js-scrubber-dot" style="transform: matrix(0, 0, 0, 0, -100, -100);"></div>
+        <div class="scrubber__circle js-scrubber-circle" style="transform: matrix(0, 0, 0, 0, -100, -100);"></div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.2/TweenMax.min.js"></script>
+    <script src="./index.js"></script>
+    <script>
+        var a = new scrubber({
+            el: document.querySelector('.scrubber'),
+            circle: '',
+            dot: '',
+            distance: 10,
+            create: function (e) {
+                console.log('created', e)
+            },
+            update: function (e) {
+                console.log('updating', e)
+            },
+            end: function (e) {
+                console.log('end', e)
+            }
+        })
+        a.enable()
+
+        // setTimeout(function () {
+        //     a.disable()            
+        // },1000) 
+
+
+
+    </script>
+</body>
+
+</html>
