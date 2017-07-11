@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <canvas class="background" width="1280" height="640"></canvas>
+    <button id="pause">暂停</button>
+    <script src="./videoSwitchFilter.js"></script>
+    <script>
+        var cav = document.querySelector('.background')
+        var ctx = cav.getContext('2d')
+        var temp = document.createElement('canvas')
+        temp.width = 1280
+        temp.height = 640
+        var tempctx = temp.getContext('2d')
+        var video = document.querySelector('#myvideo')
+        var mask = document.createElement('img')
+        var maskwidth = 162
+        var maskheight = 92
+        var pause = 1
+        mask.src = "./img/videomask-0.png"
+        mask.onload = function () {
+            ctx.drawImage(mask, 0, 0, 1280, 640)
+        }
+        video = document.createElement('video')
+        video.src = './video/01.mp4'
+        video.onload = function () {
+            tempctx.drawImage(video, 0, 0, 1280, 640)
+            ctx.drawImage(video, 0, 0, 1280, 640)
+
+        }
+        var video2 = document.createElement('video')
+        video2.src = './video/02.mp4'
+        var row = 1
+        var col = 1
+        video.loop = true
+        video2.loop = true
+
+        video.play()
+        video2.play()
+        document.querySelector('#pause').addEventListener('click', pausehandle)
+
+        function pausehandle() {
+            pause = !pause
+        }
+
+        setInterval(function a() {
+            if (row > 15) {
+                row = 1
+            }
+            if (col > 5) {
+                col = 1
+                if (!pause) {
+                    row++
+                }
+            }
+
+            ctx.drawImage(video, 0, 0, 1280, 640)
+            ctx.globalCompositeOperation = "destination-in";
+            ctx.drawImage(mask, maskwidth * col, maskheight * row, maskwidth, maskheight, 0, 0, 1280, 640)
+            ctx.globalCompositeOperation = 'destination-over'
+            ctx.drawImage(video2, 0, 0, 1280, 640)
+            ctx.globalCompositeOperation = 'source-over'
+
+            if (!pause) {
+                col++
+            }
+            // requestAnimationFrame(a)
+        }, 100)
+    </script>
+</body>
+
+</html>

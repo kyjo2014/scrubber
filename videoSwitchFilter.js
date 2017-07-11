@@ -3,11 +3,22 @@ videoSwitchFilter.prototype.init = function () {
     // this._videoHeight = 720,
     this._canvasWidth = 1280
     this._canvasHeight = 720
+    this._maskIdx = 0
+    this._canvasTemp = document.createElement('canvas')
+    this._canvasTemp.width = this._canvasWidth
+    this._canvasTemp.height = this._canvasHeight
+    this.canvas = {
+        el: this.el,
+        ctx: this.el.getContext('2d'),
+
+    }
 }
 
 
 videoSwitchFilter.prototype.render = function (isSwitch) {
-    isSwitch
+    if (isSwitch) {
+
+    }
 }
 
 function videoSwitchFilter(opt) {
@@ -21,5 +32,5 @@ function videoSwitchFilter(opt) {
     this.mask = this._options.mask
     this._maskWidth = this._options.masksize.width
     this._maskHeight = this._options.masksize.height
-    this._canvasTemp = document.createElement('canvas')
+    this._cb = this._options.onUpdate
 }
