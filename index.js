@@ -66,6 +66,7 @@ scrubber.prototype._pointerupHandler = function (e) {
     this._isPointerdown = !1
     this._hideDots()
     this._end(e)
+    console.log(this)
 }
 
 
@@ -126,7 +127,9 @@ scrubber.prototype._updateDots = function (amount, dir) {
         dot = this._dots[this._dotsArray.length]
         dot && (
             this._dotsArray.push(dot),
-            TweenMax.to(dot, .1, {
+            TweenMax.fromTo(dot, .1,{
+                scale: 0
+            } ,{
                 scale: 1,
                 overwrite: "all",
                 onUpdate: this._updateDot,
