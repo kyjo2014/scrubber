@@ -61,6 +61,25 @@ videoSwitchFilter.prototype.resume = function () {
 
 
 
+videoSwitchFilter.prototype.next = function () {
+    if (this._videoIdx < this.resource.length - 1) {
+        this._videoIdx++
+    } else {
+        console.error('at video end')
+    }
+}
+
+videoSwitchFilter.prototype.prev = function () {
+    if (this._videoIdx > 0) {
+        this._videoIdx--
+            this.reverse()
+    } else {
+        console.error(' at video start')
+    }
+}
+
+
+
 
 
 
