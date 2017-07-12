@@ -13,6 +13,35 @@
     <button id="pause">暂停</button>
     <script src="./videoSwitchFilter.js"></script>
     <script>
+        var switcher = new videoSwitchFilter({
+            el: '.background',
+            resource: ['./video/01.mp4', './video/02.mp4'],
+            mask: './img/videomask-0.png',
+            masksize: {
+                width: 162,
+                height: 92
+            },
+            delay: 5,
+            onLoaded: function () {
+                console.log('loaded')
+            },
+            onUpdate: function () {
+                console.log('udpate')
+            }
+        })
+        switcher.init()
+        switcher.next()
+        switcher.prev()
+        switcher.pause()
+        switcher.resume()
+        switcher.reverse()
+        switcher.shortMove()
+        requestAnimationFrame(function a() {
+            switcher.render(true)
+            requestAnimationFrame(a)
+        })
+    </script>
+    <!--<script>
         var cav = document.querySelector('.background')
         var ctx = cav.getContext('2d')
         var temp = document.createElement('canvas')
@@ -73,7 +102,7 @@
             }
             // requestAnimationFrame(a)
         }, 100)
-    </script>
+    </script>-->
 </body>
 
 </html>
