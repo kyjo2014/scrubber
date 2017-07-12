@@ -11,11 +11,15 @@
 <body>
     <canvas class="background" width="1280" height="640"></canvas>
     <button id="pause">暂停</button>
+    <button id="resume">恢复</button>
+    <button id="next">下一个</button>
+    <button id="prev">上一个</button>
+    <button id="shortMove">下一帧</button>
     <script src="./videoSwitchFilter.js"></script>
     <script>
         var switcher = new videoSwitchFilter({
             el: '.background',
-            resource: ['./video/01.mp4', './video/02.mp4'],
+            resource: ['./video/01.mp4', './video/02.mp4', './video/02.mp4'],
             mask: './img/videomask-0.png',
             masksize: {
                 width: 162,
@@ -30,16 +34,33 @@
             }
         })
         switcher.init()
-        switcher.next()
-        switcher.prev()
-        switcher.pause()
-        switcher.resume()
-        switcher.reverse()
-        switcher.shortMove()
-        requestAnimationFrame(function a() {
-            switcher.render(true)
-            requestAnimationFrame(a)
+        document.querySelector('#next').addEventListener('click', function () {
+            switcher.next()
         })
+        document.querySelector('#prev').addEventListener('click', function () {
+            switcher.prev()
+        })
+        document.querySelector('#pause').addEventListener('click', function () {
+            switcher.pause()
+        })
+        document.querySelector('#resume').addEventListener('click', function () {
+            switcher.resume()
+        })
+        // switcher.next()
+        // switcher.prev()
+        // switcher.pause()
+        // switcher.resume()
+        // switcher.reverse()
+        // switcher.shortMove()
+        setInterval(
+            function () {
+                switcher.render()
+            }, 200
+        )
+        // requestAnimationFrame(function a() {
+        //     switcher.render(true)
+        //     requestAnimationFrame(a)
+        // })
     </script>
     <!--<script>
         var cav = document.querySelector('.background')

@@ -63,7 +63,9 @@ videoSwitchFilter.prototype.resume = function () {
 
 videoSwitchFilter.prototype.next = function () {
     if (this._videoIdx < this.resource.length - 1) {
-        this._videoIdx++
+        this._nextvideoIdx = this._videoIdx + 1
+        this._maskIdx = 0
+        this._isSwitching = !0
     } else {
         console.error('at video end')
     }
@@ -71,8 +73,10 @@ videoSwitchFilter.prototype.next = function () {
 
 videoSwitchFilter.prototype.prev = function () {
     if (this._videoIdx > 0) {
-        this._videoIdx--
-            this.reverse()
+        this._nextvideoIdx = this._videoIdx - 1
+        this._maskIdx = 60
+        this.reverse()
+        this._isSwitching = !0
     } else {
         console.error(' at video start')
     }
@@ -96,12 +100,6 @@ videoSwitchFilter.prototype.shortMove = function () {
 
 
 
-
-
-
-
-
-
 videoSwitchFilter.prototype.init = function () {
     // this._videoWidth = 1280,
     // this._videoHeight = 720,
@@ -110,11 +108,12 @@ videoSwitchFilter.prototype.init = function () {
     this._canvasWidth = 1280
     this._canvasHeight = 720
     this._videoIdx = 0
+    this._nextvideoIdx = 0
     this._maskIdx = 0
     this._canvasTemp = document.createElement('canvas')
     this._canvasTemp.width = this._canvasWidth
     this._canvasTemp.height = this._canvasHeight
-
+    this._isSwitching = !1
 
     if (isUrl(this.el)) {
         try {
@@ -124,16 +123,21 @@ videoSwitchFilter.prototype.init = function () {
         }
     }
 
-    this
-        .resource
-        .map(function (resource) {
-            if (isUrl(resource)) {
-                var loader = new fileLoader(resource)
-                return loader.loadVideo(_self._storehandle)
-            }
+
+    for (var i = 0; i < this.resource.length; i++) {
+        if (isUrl(this.resource[i])) {
+            var loader = new fileLoader({
+                url: this.resource[i]
+            })
+            this.resource[i] = loader.loadVideo(_self._storehandle)
+        }
+    }
+    if (typeof this.mask == 'string') {
+        var loader = new fileLoader({
+            url: this.mask
         })
-
-
+        this.mask = loader.loadImage(_self._storehandle)
+    }
     this.canvas = {
         el: this.el,
         ctx: this.el.getContext('2d')
@@ -142,51 +146,59 @@ videoSwitchFilter.prototype.init = function () {
 
 
 videoSwitchFilter.prototype._storehandle = function () {
-    var len = this.resource.length
-    this._loadedResource = this._loadedResource || 0
-    this._loadedResource++
-        if (len == this._loadedResource) {
-            this._cbs['loaded']()
-        }
+    // var len = this.resource.length
+    // this._loadedResource = this._loadedResource || 0
+    // this._loadedResource++
+    //     if (len == this._loadedResource) {
+    //         this._cbs['loaded']()
+    //     }
 }
 
 
-videoSwitchFilter.prototype.render = function (isSwitch) {
+videoSwitchFilter.prototype.render = function () {
     var cavctx = this.canvas.ctx
-    var cavTempctx = this._canvasTemp.getContext('2d')
-    var col = 0
-    var row = 0
-    if (col > 5) {
-        row++
-        col = 1
+    var tempctx = this._canvasTemp.getContext('2d')
+    var resource = this.resource
+    var now = this.resource[this._videoIdx]
+    var next = this.resource[this._nextvideoIdx]
+    var mask = this.mask
+    var cavWidth = this._canvasWidth
+    var cavHeight = this._canvasHeight
+    var maskwidth = this._maskWidth
+    var maskheight = this._maskHeight
+    var mask = document.createElement('img')
+    mask.src = './img/videomask-0.png'
+    if (now.paused)
+        now.play()
+    if (next.paused)
+        next.play()
+    if (this._isSwitching) {
+        tempctx.clearRect(0, 0, this._canvasWidth, this._canvasHeight)
+        tempctx.drawImage(next, 0, 0, this._canvasWidth, this._canvasHeight)
+        tempctx.globalCompositeOperation = "destination-in"
+        tempctx.drawImage(mask, 0, 92 * this._maskIdx, maskwidth, maskheight, 0, 0, cavWidth, cavHeight)
+        tempctx.globalCompositeOperation = "source-over"
+        cavctx.globalCompositeOperation = 'source-over'
+        cavctx.drawImage(now, 0, 0, cavWidth, cavHeight)
+        cavctx.drawImage(this._canvasTemp, 0, 0, cavWidth, cavHeight)
+
+        if ((this._maskIdx == 0 && this.isReverse) || (this._maskIdx == 60 && !this.isReverse)) {
+            this._isSwitching = !1
+            this._maskIdx = 0
+            this._videoIdx = this._nextvideoIdx
+        }
+        if (!this._isPause) {
+            if (this.isReverse) {
+                this._maskIdx--
+            } else {
+                this._maskIdx++
+            }
+        }
+
+
+    } else {
+        cavctx.drawImage(now, 0, 0, cavWidth, cavHeight)
     }
-
-    //测试用的
-    if (row > 15) {
-        row = 1
-    }
-
-
-    if (isSwitch) {
-        col++
-    }
-    cavTempctx.clearRect(0, 0, this._canvasWidth, this._canvasHeight)
-    cavTempctx.globalCompositeOperation = "source-over"
-    cavTempctx.drawImage(this.resource[this._videoIdx + 1], 0, 0, this._canvasWidth, this._canvasHeight)
-    cavTempctx.globalCompositeOperation = "destination-in"
-    cavTempctx.drawImage(this.mask,
-        this._maskWidth * col,
-        this._maskHeight * row,
-        this._maskWidth,
-        this._maskHeight,
-        0,
-        0,
-        this._canvasWidth,
-        this._canvasHeight
-    )
-    cavctx.drawImage(this.resource[this._videoIdx], 0, 0, this._canvasWidth, this._canvasHeight)
-    cavctx.drawImage(this._canvasTemp, 0, 0, this._canvasWidth, this._canvasHeight)
-
 }
 
 
