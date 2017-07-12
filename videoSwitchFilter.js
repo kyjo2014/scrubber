@@ -48,7 +48,7 @@ function isUrl(url) {
 
 
 videoSwitchFilter.prototype.reverse = function () {
-    this.isReverse = !0
+    this.isReverse = !this.isReverse
 }
 
 videoSwitchFilter.prototype.pause = function () {
@@ -62,9 +62,12 @@ videoSwitchFilter.prototype.resume = function () {
 
 
 videoSwitchFilter.prototype.next = function () {
-    if (this._videoIdx < this.resource.length - 1) {
-        this._nextvideoIdx = this._videoIdx + 1
+    if (this._videoIdx < this.resource.length - 1 && !this._isAnimate) {
+        this._isAnimate = true
+        this._tempVideoIdx = this._videoIdx + 1
         this._maskIdx = 0
+        if (this.isReverse)
+            this.reverse()
         this._isSwitching = !0
     } else {
         console.error('at video end')
@@ -72,10 +75,16 @@ videoSwitchFilter.prototype.next = function () {
 }
 
 videoSwitchFilter.prototype.prev = function () {
-    if (this._videoIdx > 0) {
-        this._nextvideoIdx = this._videoIdx - 1
-        this._maskIdx = 60
-        this.reverse()
+
+    if (this._videoIdx > 0 && !this._isAnimate) {
+        this._isAnimate = true
+        this._maskIdx = 101
+        this._tempVideoIdx = this._videoIdx - 1
+
+        cavVideo.play()
+        tempVideo.play()
+        if (!this.isReverse)
+            this.reverse()
         this._isSwitching = !0
     } else {
         console.error(' at video start')
@@ -108,7 +117,7 @@ videoSwitchFilter.prototype.init = function () {
     this._canvasWidth = 1280
     this._canvasHeight = 720
     this._videoIdx = 0
-    this._nextvideoIdx = 0
+    this._tempVideoIdx = 0
     this._maskIdx = 0
     this._canvasTemp = document.createElement('canvas')
     this._canvasTemp.width = this._canvasWidth
@@ -159,8 +168,8 @@ videoSwitchFilter.prototype.render = function () {
     var cavctx = this.canvas.ctx
     var tempctx = this._canvasTemp.getContext('2d')
     var resource = this.resource
-    var now = this.resource[this._videoIdx]
-    var next = this.resource[this._nextvideoIdx]
+    var cavVideo = this.resource[this._videoIdx]
+    var tempVideo = this.resource[this._tempVideoIdx]
     var mask = this.mask
     var cavWidth = this._canvasWidth
     var cavHeight = this._canvasHeight
@@ -168,36 +177,47 @@ videoSwitchFilter.prototype.render = function () {
     var maskheight = this._maskHeight
     var mask = document.createElement('img')
     mask.src = './img/videomask-0.png'
-    if (now.paused)
-        now.play()
-    if (next.paused)
-        next.play()
+
     if (this._isSwitching) {
         tempctx.clearRect(0, 0, this._canvasWidth, this._canvasHeight)
-        tempctx.drawImage(next, 0, 0, this._canvasWidth, this._canvasHeight)
-        tempctx.globalCompositeOperation = "destination-in"
-        tempctx.drawImage(mask, 0, 92 * this._maskIdx, maskwidth, maskheight, 0, 0, cavWidth, cavHeight)
+        tempctx.drawImage(tempVideo, 0, 0, this._canvasWidth, this._canvasHeight)
+        if (!this.isReverse) {
+            tempctx.globalCompositeOperation = "destination-in"
+        } else {
+            tempctx.globalCompositeOperation = "destination-out"
+        }
+
+        tempctx.drawImage(mask, 162 * this._maskIdx % 6, 92 * Math.floor(this._maskIdx / 6), maskwidth, maskheight, 0, 0, cavWidth, cavHeight)
+        console.log(this._maskIdx, this._maskIdx % 6, Math.floor(this._maskIdx / 6))
         tempctx.globalCompositeOperation = "source-over"
         cavctx.globalCompositeOperation = 'source-over'
-        cavctx.drawImage(now, 0, 0, cavWidth, cavHeight)
+        cavctx.drawImage(cavVideo, 0, 0, cavWidth, cavHeight)
         cavctx.drawImage(this._canvasTemp, 0, 0, cavWidth, cavHeight)
 
-        if ((this._maskIdx == 0 && this.isReverse) || (this._maskIdx == 60 && !this.isReverse)) {
+        if (!this._isPause) {
+            if (!this.isReverse)
+                this._maskIdx++
+                else
+                    this._maskIdx--
+
+        }
+        if (this._maskIdx == 101 && !this.isReverse) {
             this._isSwitching = !1
             this._maskIdx = 0
-            this._videoIdx = this._nextvideoIdx
+            this._videoIdx = this._tempVideoIdx
+            this._isAnimate = false
         }
-        if (!this._isPause) {
-            if (this.isReverse) {
-                this._maskIdx--
-            } else {
-                this._maskIdx++
-            }
+        if (this._maskIdx == 0 && this.isReverse) {
+            this._isSwitching = !1
+            this._maskIdx = 0
+            this._videoIdx = this._tempVideoIdx
+            this._isAnimate = false
         }
+
 
 
     } else {
-        cavctx.drawImage(now, 0, 0, cavWidth, cavHeight)
+        cavctx.drawImage(cavVideo, 0, 0, cavWidth, cavHeight)
     }
 }
 

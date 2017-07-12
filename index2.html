@@ -19,7 +19,7 @@
     <script>
         var switcher = new videoSwitchFilter({
             el: '.background',
-            resource: ['./video/01.mp4', './video/02.mp4', './video/02.mp4'],
+            resource: ['./video/01.mp4', './video/02.mp4', './video/03.mp4'],
             mask: './img/videomask-0.png',
             masksize: {
                 width: 162,
@@ -52,10 +52,11 @@
         // switcher.resume()
         // switcher.reverse()
         // switcher.shortMove()
-        setInterval(
-            function () {
+        requestAnimationFrame(
+            function a() {
                 switcher.render()
-            }, 200
+                requestAnimationFrame(a)
+        }
         )
         // requestAnimationFrame(function a() {
         //     switcher.render(true)
