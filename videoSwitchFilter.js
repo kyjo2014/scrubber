@@ -66,6 +66,10 @@ videoSwitchFilter.prototype.next = function () {
         this._isAnimate = true
         this._tempVideoIdx = this._videoIdx + 1
         this._maskIdx = 0
+        var cavVideo = this.resource[this._videoIdx]
+        var tempVideo = this.resource[this._tempVideoIdx]
+        cavVideo.play()
+        tempVideo.play()
         if (this.isReverse)
             this.reverse()
         this._isSwitching = !0
@@ -80,7 +84,8 @@ videoSwitchFilter.prototype.prev = function () {
         this._isAnimate = true
         this._maskIdx = 101
         this._tempVideoIdx = this._videoIdx - 1
-
+        var cavVideo = this.resource[this._videoIdx]
+        var tempVideo = this.resource[this._tempVideoIdx]
         cavVideo.play()
         tempVideo.play()
         if (!this.isReverse)
