@@ -183,7 +183,7 @@ videoSwitchFilter.prototype._storehandle = function () {
     if (isDone(this.resource.length, this._loadedRes)) {
         // this._cb['loaded']()
     }
-   
+
 }
 
 
@@ -223,18 +223,18 @@ videoSwitchFilter.prototype.render = function () {
                     this._maskIdx--
 
         }
-        if (this._maskIdx == 101 && !this.isReverse) {
+
+
+        function isAnimatFinish() {
+            return (this._maskIdx == 101 && !this.isReverse) || (this._maskIdx == 0 && this.isReverse)
+        }
+        if (isAnimatFinish.call(this)) {
             this._isSwitching = !1
             this._maskIdx = 0
             this._videoIdx = this._tempVideoIdx
             this._isAnimate = false
         }
-        if (this._maskIdx == 0 && this.isReverse) {
-            this._isSwitching = !1
-            this._maskIdx = 0
-            this._videoIdx = this._tempVideoIdx
-            this._isAnimate = false
-        }
+        
 
 
 
