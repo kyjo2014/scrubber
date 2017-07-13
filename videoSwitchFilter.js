@@ -11,7 +11,7 @@ fileLoader.prototype.loadImage = function (callback) {
 fileLoader.prototype.loadVideo = function (callback) {
     var video = document.createElement('video')
     video.src = this._url
-    video.onload = function () {
+    video.oncanplaythrough = function () {
         callback()
     }
     return video
@@ -66,10 +66,8 @@ videoSwitchFilter.prototype.next = function () {
         this._isAnimate = true
         this._tempVideoIdx = this._videoIdx + 1
         this._maskIdx = 0
-        var cavVideo = this.resource[this._videoIdx]
-        var tempVideo = this.resource[this._tempVideoIdx]
-        cavVideo.play()
-        tempVideo.play()
+        this.playVideo(this._videoIdx)
+        this.playVideo(this._tempVideoIdx)
         if (this.isReverse)
             this.reverse()
         this._isSwitching = !0
@@ -84,10 +82,8 @@ videoSwitchFilter.prototype.prev = function () {
         this._isAnimate = true
         this._maskIdx = 101
         this._tempVideoIdx = this._videoIdx - 1
-        var cavVideo = this.resource[this._videoIdx]
-        var tempVideo = this.resource[this._tempVideoIdx]
-        cavVideo.play()
-        tempVideo.play()
+        this.playVideo(this._videoIdx)
+        this.playVideo(this._tempVideoIdx)
         if (!this.isReverse)
             this.reverse()
         this._isSwitching = !0
@@ -98,7 +94,10 @@ videoSwitchFilter.prototype.prev = function () {
 
 
 
-
+videoSwitchFilter.prototype.playVideo = function (videoIdx) {
+    var video = this.resource[videoIdx]
+    video.play()
+}
 
 
 videoSwitchFilter.prototype.shortMove = function () {
@@ -113,12 +112,23 @@ videoSwitchFilter.prototype.shortMove = function () {
 
 
 
+videoSwitchFilter.prototype._getMaskIdx = function () {
+    try {
+        var imgWidth = this.mask.width
+        var imgHeight = this.mask.height
+        var maskwidth = this._maskWidth
+        var maskheight = this._maskHeight
+        this._maskIdx = Math.round(imgWidth / maskwidth) * Math.round(imgHeight / maskheight)
+    } catch (error) {
+        throw new Error('图片未加载完成')
+    }
+}
+
+
 
 videoSwitchFilter.prototype.init = function () {
-    // this._videoWidth = 1280,
-    // this._videoHeight = 720,
     var _self = this
-
+    this._loadedRes = 0
     this._canvasWidth = 1280
     this._canvasHeight = 720
     this._videoIdx = 0
@@ -143,15 +153,16 @@ videoSwitchFilter.prototype.init = function () {
             var loader = new fileLoader({
                 url: this.resource[i]
             })
-            this.resource[i] = loader.loadVideo(_self._storehandle)
+            this.resource[i] = loader.loadVideo(_self._storehandle.bind(this))
         }
     }
     if (typeof this.mask == 'string') {
         var loader = new fileLoader({
             url: this.mask
         })
-        this.mask = loader.loadImage(_self._storehandle)
+        this.mask = loader.loadImage(_self._storehandle.bind(this))
     }
+
     this.canvas = {
         el: this.el,
         ctx: this.el.getContext('2d')
@@ -160,12 +171,19 @@ videoSwitchFilter.prototype.init = function () {
 
 
 videoSwitchFilter.prototype._storehandle = function () {
-    // var len = this.resource.length
-    // this._loadedResource = this._loadedResource || 0
-    // this._loadedResource++
-    //     if (len == this._loadedResource) {
-    //         this._cbs['loaded']()
-    //     }
+    this._loadedRes++
+        this._getMaskIdx()
+
+
+
+    function isDone(totalVal, currentVal) {
+        return totalVal == currentVal
+    }
+
+    if (isDone(this.resource.length, this._loadedRes)) {
+        // this._cb['loaded']()
+    }
+   
 }
 
 
@@ -180,8 +198,7 @@ videoSwitchFilter.prototype.render = function () {
     var cavHeight = this._canvasHeight
     var maskwidth = this._maskWidth
     var maskheight = this._maskHeight
-    var mask = document.createElement('img')
-    mask.src = './img/videomask-0.png'
+    var mask = this.mask
 
     if (this._isSwitching) {
         tempctx.clearRect(0, 0, this._canvasWidth, this._canvasHeight)
@@ -193,7 +210,7 @@ videoSwitchFilter.prototype.render = function () {
         }
 
         tempctx.drawImage(mask, 162 * this._maskIdx % 6, 92 * Math.floor(this._maskIdx / 6), maskwidth, maskheight, 0, 0, cavWidth, cavHeight)
-        console.log(this._maskIdx, this._maskIdx % 6, Math.floor(this._maskIdx / 6))
+        // console.log(this._maskIdx, this._maskIdx % 6, Math.floor(this._maskIdx / 6))
         tempctx.globalCompositeOperation = "source-over"
         cavctx.globalCompositeOperation = 'source-over'
         cavctx.drawImage(cavVideo, 0, 0, cavWidth, cavHeight)
