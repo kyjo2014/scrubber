@@ -1,0 +1,32 @@
+        body {
+            background-color: grey;
+        }
+
+        .scrubber__dot:first-child {
+            top: -5px;
+            left: -5px;
+            width: 10px;
+            height: 10px;
+        }
+
+        .js-scrubber-dot {
+            top: -2px;
+            left: -2px;
+            width: 4px;
+            height: 4px;
+            position: absolute;
+            border-radius: 50%;
+            background-color: white;
+            cursor: pointer;
+        }
+
+        .js-scrubber-circle {
+            background-color: white;
+            top: -20px;
+            left: -20px;
+            width: 40px;
+            height: 40px;
+            position: absolute;
+            border-radius: 50%;
+            cursor: pointer;
+        }
